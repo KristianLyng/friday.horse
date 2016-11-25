@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"> 
+<title>Friday horse!</title>
+</head>
+<body onload="initIt();" style="margin: 0px;">
+<img id="horse" style="display: none; width: 100%; position: absolute; left: 0px; right: 0px; z-index: -1;">
+<script>
+
+/*
+ * This is all essentially a lesson in "MEEEEH, can't be bothered".
+ *
+ * That said, I've written it all, and I'm fully aware that it probably 
+ * makes some people cringe. That's part of the fun. CRINGE I TELL YOU.
+ *
+ * You may want to look at http://kly.no for something slightly 
+ * more constructive.
+ */
+
+var fontHandler = 0;
+var ctx;
+var col = 0;
+var multi = 1;
+var degreeOfHelj = 1.0;
+
+function printDiff(t)
+{
+	var str = "";
+	if (t.d > 1)
+		str = t.d + " days";
+	else if (t.d == 1)
+		str = t.d + " day";
+	
+	if (t.h > 1)
+		str += " " + t.h + " hours";
+	else if (t.h == 1)
+		str += " " + t.h + " hour";
+	else if (t.d > 0)
+		str += " 0 hours";
+
+	if (t.m > 1)
+		str += " " + t.m + " minutes";
+	else if (t.m == 1)
+		str += " " + t.m + " minute";
+	else if (t.d > 0 || t.h > 0)
+		str += " 0 minutes";
+
+	if (t.s > 1)
+		str += " " + t.s + " seconds";
+	else if (t.s == 1)
+		str += " " + t.s + " second";
+	else if (t.d > 0 || t.h > 0 || t.m > 0)
+		str += " 0 seconds";
+	return str;
+}
+var fredda = 0;
+var helj = 0;
+function doit()
+{
+	var now = new Date();
+	var then = new Date();
+	var d = then.getDay();
+	var out1 = document.getElementById("output1");
+	var out2 = document.getElementById("output2");
+
+	then.setHours(0);
+	then.setMinutes(0)
+	then.setDate(then.getDate() + d + 1);
+	then.setSeconds(0);
+	diffh = 23 - now.getHours();
+	diffm = 59 - now.getMinutes();
+	diffs = 59 - now.getSeconds();
+	var diff = {
+		d:4-d,
+		h:diffh,
+		m:diffm,
+		s:diffs
+	}
+	if (now.getDay() < 5) {
+		out1.innerHTML = "in " + printDiff(diff);
+		fredda = 0;
+	} else if (now.getDay() == 5) {
+		out1.innerHTML = " NOW!";
+		fredda = 1;
+	} else {
+		diff.d = 11-d;;
+		out1.innerHTML = " in " + printDiff(diff);
+	}
+	then.setHours(16);
+	h = now.getHours();
+	if (h > 15) {
+		d++;
+		h-=24;
+	}
+	diffh = 15 - h;
+	diffm = 59 - now.getMinutes();
+	var diff2 = {
+		d:5-d,
+		h:diffh,
+		m:diffm,
+		s:diffs
+	}
+	if (now.getDay() < 5 || (now.getDay() == 5 && now.getHours() < 16)) {
+		out2.innerHTML = "in " + printDiff(diff2);
+	} else {
+		out2.innerHTML = "NOW!";
+	}
+	if (now.getDay() >= 5) {
+		degreeOfHelj = 1.0;
+		if (now.getDay() == 5 && now.getHours() < 16) {
+			degreeOfHelj = 0.5 - ((16 - now.getHours()) / 16);
+		} else {
+			if (degreeOfHelj != 1.0)
+				helj = 0;
+			degreeOfHelj = 1.0;
+		}
+		if (helj == 0) {
+			helj = 1;
+			horsy();
+		}
+	}
+}
+
+function noHorsySadface()
+{
+	var horse = document.getElementById("horse");
+	var e = document.getElementById('blah');
+	horse.style.display = "none";
+	e.style.color = "black";
+	clearInterval(fontHandler);
+	fontHandler = 0;
+}
+
+function pickHorsy()
+{
+	var horse = document.getElementById("horse");
+	var n = parseInt(1+Math.random()*13);
+	horse.src = "horse-" + n + ".jpg";
+	horse.style.display = "";
+	if (degreeOfHelj < 1.0) {
+		horse.style.left = ((0.5 - (degreeOfHelj/4)) * 100) + "%";
+		horse.style.top = "150px";
+		horse.style.width = (100 * degreeOfHelj)/2 + "%"
+	} else {
+		horse.style.top = 0;
+		horse.style.left = 0;
+		horse.style.width = "100%"
+		if (fontHandler == 0)
+			fontHandler = setInterval(setFontColor,10);
+	}
+	horse.onclick = pickHorsy;
+}
+function horsy()
+{
+	if ((helj == fredda) && (helj == 1)) {
+		pickHorsy();
+	} else {
+		noHorsySadface();
+	}
+}
+function initIt() {
+	ctx = document.getElementById("hiddenCanvas").getContext('2d');
+	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
+	doit();
+	horsy();
+}
+function setFontColor() {
+	var e = document.getElementById('blah');
+	e.style.color = getColorStop(col);
+	col = col + multi;
+	if (col == 1000 || col == 0) {
+		multi = multi * -1;
+	}
+}
+function drawGradient(gradients)
+{
+        var gradient = ctx.createLinearGradient(0,0,1000,0);
+        var stops = gradients.length - 1;
+        for (var color in gradients) {
+                var i = color / stops;
+                gradient.addColorStop(i, gradients[color]);
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = gradient;
+        ctx.moveTo(0,0);
+        ctx.lineTo(1000,0);
+        ctx.lineWidth = 10; 
+        ctx.closePath();
+        ctx.stroke();
+        ctx.moveTo(0,0);
+}
+/*
+ * Get the color of a gradient, range is from 0 to 999 (inclusive).
+ */
+function getColorStop(x) {
+        x = parseInt(x);
+        if (x > 999)
+                x = 999;
+        if (x < 0)
+                x = 0;
+        return getColor(x,0);
+}
+
+/*
+ * Get the color on the hidden canvas at a specific point. Could easily be
+ * made generic.
+ */
+function getColor(x,y) {
+        var imageData = ctx.getImageData(x, y, 1, 1);
+        var data = imageData.data;
+        if (data.length < 4)
+                return false;
+        var ret = 'rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')';
+        return ret;
+}
+
+var horses = new Array();
+function initCache()
+{
+	var i;
+	for (i=1; i<14; i++) {
+		var e = document.createElement("IMG");
+		e.src = "horse-" + i + ".jpg";
+		horses.push(e);
+	}
+}
+setInterval(horsy,60*1000);
+setInterval(doit, 1000);
+document.onclick =  pickHorsy;
+initCache();
+
+</script>
+<canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
+<!--
+    I'll use blink if you complain about <center>.
+    -->
+<center id="blah">
+<h1 style="margin-top: 0;">friday.horse</h1>
+<h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
+<h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
+</center>
+<p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;">Friday horses as a service, by <a href="http://kly.no">Kristian Lyngstøl</a></p>
+</body>
+</html>
