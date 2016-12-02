@@ -63,6 +63,16 @@ var ctx;
 var col = 0;
 var multi = 1;
 var degreeOfHelj = 1.0;
+var horses = new Array();
+function initCache()
+{
+       var i;
+       for (i=0; i<horsies.length; i++) {
+               var e = document.createElement("IMG");
+               e.src = horsies[i].horse;
+               horses.push(e);
+       }
+}
 
 function printDiff(t)
 {
@@ -214,6 +224,7 @@ function initIt() {
 	setInterval(doit, 1000);
 	doit();
 	document.onclick =  clickHandler;
+	initCache();
 }
 function setFontColor() {
 	var e = document.getElementById('blah');
