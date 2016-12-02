@@ -12,6 +12,17 @@ body {
 </head>
 <body onload="initIt();" style="margin: 0px;">
 <img id="horse" style="display: none; width: 100%; position: absolute; left: 0px; right: 0px; z-index: -1;">
+<canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
+<!--
+    I'll use blink if you complain about <center>.
+    -->
+<center id="blah">
+<h1 style="margin-top: 0;">friday.horse</h1>
+<h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
+<h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
+<h4 id="attribution"></h4>
+</center>
+<p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;"><a href="https://github.com/KristianLyng/friday.horse">Friday horses as a service</a></p>
 <script>
 
 /*
@@ -41,7 +52,6 @@ var horsies = [
 	{ horse: "horse-11.jpg", attribution: "N/A" },
 	{ horse: "horse-12.jpg", attribution: "N/A" },
 	{ horse: "horse-13.jpg", attribution: "N/A" },
-	{ horse: "horse-14.jpg", attribution: "N/A" },
 	{ horse: "horse-15.jpg", attribution: '<a href="https://www.pexels.com/photo/animal-silhouette-horizon-horse-9797/">link</a>' },
 	{ horse: "horse-16.jpg", attribution: '<a href="http://www.publicdomainpictures.net/view-image.php?image=112139&picture=horse-head-through-window">link</a>' },
 	{ horse: "horse-17.jpg", attribution: '<a href="https://www.flickr.com/photos/82182478@N00/5210454901">flickr-link</a>' }
@@ -198,8 +208,12 @@ function horsy()
 function initIt() {
 	ctx = document.getElementById("hiddenCanvas").getContext('2d');
 	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
-	doit();
+	rotateHorsy();
 	horsy();
+	setInterval(rotateHorsy,60 * 1000);
+	setInterval(doit, 1000);
+	doit();
+	document.onclick =  clickHandler;
 }
 function setFontColor() {
 	var e = document.getElementById('blah');
@@ -256,23 +270,7 @@ function rotateHorsy() {
 	var n = parseInt(Math.random()*horsies.length);
 	horsyHorse = horsies[n];
 }
-rotateHorsy();
-setInterval(rotateHorsy,60 * 1000);
-setInterval(horsy,60*1000);
-setInterval(doit, 1000);
-document.onclick =  clickHandler;
 
 </script>
-<canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
-<!--
-    I'll use blink if you complain about <center>.
-    -->
-<center id="blah">
-<h1 style="margin-top: 0;">friday.horse</h1>
-<h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
-<h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
-<h4 id=attribution></h4>
-</center>
-<p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;"><a href="https://github.com/KristianLyng/friday.horse">Friday horses as a service</a></p>
 </body>
 </html>
