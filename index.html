@@ -224,7 +224,7 @@ function initIt() {
 	setInterval(doit, 1000);
 	doit();
 	document.onclick =  clickHandler;
-	initCache();
+	setTimeout(initCache,10000);
 }
 function setFontColor() {
 	var e = document.getElementById('blah');
