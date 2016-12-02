@@ -24,6 +24,30 @@ body {
  * more constructive.
  */
 
+/*
+ * Add new horses here. Attribution can be HTML if needed.
+ */
+var horsies = [
+	{ horse: "horse-1.jpg", attribution: "N/A" },
+	{ horse: "horse-2.jpg", attribution: "N/A" },
+	{ horse: "horse-3.jpg", attribution: "N/A" },
+	{ horse: "horse-4.jpg", attribution: "N/A" },
+	{ horse: "horse-5.jpg", attribution: "N/A" },
+	{ horse: "horse-6.jpg", attribution: "N/A" },
+	{ horse: "horse-7.jpg", attribution: "N/A" },
+	{ horse: "horse-8.jpg", attribution: "N/A" },
+	{ horse: "horse-9.jpg", attribution: "N/A" },
+	{ horse: "horse-10.jpg", attribution: "N/A" },
+	{ horse: "horse-11.jpg", attribution: "N/A" },
+	{ horse: "horse-12.jpg", attribution: "N/A" },
+	{ horse: "horse-13.jpg", attribution: "N/A" },
+	{ horse: "horse-14.jpg", attribution: "N/A" },
+	{ horse: "horse-15.jpg", attribution: '<a href="https://www.pexels.com/photo/animal-silhouette-horizon-horse-9797/">link</a>' },
+	{ horse: "horse-16.jpg", attribution: '<a href="http://www.publicdomainpictures.net/view-image.php?image=112139&picture=horse-head-through-window">link</a>' },
+	{ horse: "horse-17.jpg", attribution: '<a href="https://www.flickr.com/photos/82182478@N00/5210454901">flickr-link</a>' }
+	
+];
+
 var fontHandler = 0;
 var ctx;
 var col = 0;
@@ -141,8 +165,10 @@ function noHorsySadface()
 function pickHorsy()
 {
 	var horse = document.getElementById("horse");
+	var at = document.getElementById("attribution");
 	var n = parseInt(1+Math.random()*13);
-	horse.src = "horse-" + n + ".jpg";
+	horse.src = horsyHorse.horse;
+	at.innerHTML = "Picture attribution: " + horsyHorse.attribution;
 	horse.style.display = "";
 	if (degreeOfHelj < 1.0) {
 		horse.style.left = ((0.5 - (degreeOfHelj/4)) * 100) + "%";
@@ -155,7 +181,11 @@ function pickHorsy()
 		if (fontHandler == 0)
 			fontHandler = setInterval(setFontColor,10);
 	}
-	horse.onclick = pickHorsy;
+	horse.onclick = clickHandler;
+}
+function clickHandler() {
+	rotateHorsy();
+	pickHorsy();
 }
 function horsy()
 {
@@ -221,20 +251,16 @@ function getColor(x,y) {
         return ret;
 }
 
-var horses = new Array();
-function initCache()
-{
-	var i;
-	for (i=1; i<14; i++) {
-		var e = document.createElement("IMG");
-		e.src = "horse-" + i + ".jpg";
-		horses.push(e);
-	}
+var horsyHorse;
+function rotateHorsy() {
+	var n = parseInt(Math.random()*horsies.length);
+	horsyHorse = horsies[n];
 }
+rotateHorsy();
+setInterval(rotateHorsy,60 * 1000);
 setInterval(horsy,60*1000);
 setInterval(doit, 1000);
-document.onclick =  pickHorsy;
-initCache();
+document.onclick =  clickHandler;
 
 </script>
 <canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
@@ -245,6 +271,7 @@ initCache();
 <h1 style="margin-top: 0;">friday.horse</h1>
 <h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
 <h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
+<h4 id=attribution></h4>
 </center>
 <p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;"><a href="https://github.com/KristianLyng/friday.horse">Friday horses as a service</a></p>
 </body>
