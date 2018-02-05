@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: horse
+  name: horse
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      run: horse
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: horse
+    spec:
+      containers:
+      - image: klyno/friday.horse:2018-02-05-1
+        imagePullPolicy: IfNotPresent
+        name: horse
+        ports:
+        - containerPort: 80
+          protocol: TCP
