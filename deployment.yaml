@@ -20,13 +20,13 @@ spec:
         run: horse
     spec:
       containers:
-      - image: klyno/friday.horse:2018-02-16-3
+      - image: klyno/friday.horse:2018-02-16-4
         imagePullPolicy: IfNotPresent
         name: horse
         ports:
         - containerPort: 80
           protocol: TCP
-      - image: klyno/friday.horse:2018-02-16-3
+      - image: klyno/friday.horse:2018-02-16-4
         imagePullPolicy: IfNotPresent
         command: [ "/root/ascii-friday" ]
         name: txt

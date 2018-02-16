@@ -1,6 +1,6 @@
 #!/usr/bin/gawk -f
 # ascii-friday-horse
-# Copyright (C) 2015 Kristian Lyngstøl <kristian@bohemians.org>
+# Copyright (C) 2018 Kristian Lyngstøl <kly@kly.no>
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,22 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-#!/usr/bin/gawk -f
+#
+##############################################
+#
+# This stuff is bad, that you probably don't want to read it.
+#
+# A few notes:
+# - This stuff is horrible at HTTP, it just blindly assumes stuff.
+# - It is loosely based on a past project (gawk as a reverse proxy) and I
+#   didn't bother cleaning it properly.
+# - reply() and synthetic() should be the same, but aren't
+# - no sensible logging
+# - we depend on connection: close, and can't handle more than a single
+#   request at a time. E.g.: we suck.
+# - because it was already there, there's cache logic when reading
+#   horsy-pics from disk. Bad caching.
+# - More pics? Need a manual update.
 
 function say(content) {
         printf "%s", content |& Service
@@ -30,6 +45,7 @@ function synthetic(status, response, msg) {
 
 function reply(msg) {
         say("HTTP/1.1 200 OK\n");
+	say("Content-Type: text/plain\n");
         say("Connection: close\n\n");
         say(msg "\n");
 }
@@ -41,6 +57,31 @@ function get(url) {
 	}
 }
 
+function diff(difft) {
+	min=60
+	h=3600
+	d=86400
+	x = difft % min
+	str = x " seconds";
+	if (difft <= min)
+		return str;
+
+	difft = difft - x
+	x = difft % h
+	str = x/min " minutes, " str;
+	if (difft <= h)
+		return str;
+
+	difft = difft - x
+	x = difft % d
+	str = x/h " hours, " str;
+	if (difft <= d)
+		return str;
+
+	difft = difft - x
+	str = (difft / d) " days, " str;
+	return str
+}
 function handle_request() {
         Service |& getline
         url=$2
@@ -48,11 +89,11 @@ function handle_request() {
 	"date --date=friday +%s" | getline eta
 	"date +%s" | getline now
 	if (now > eta && now < eta + 3600*24) {
-		msg = "FRIDAY!\n"
 		x= 1 + rand() * 16;
-		print "x: " x "\n"
 		x=int(x)
-		url="/horse-"x".txt"
+		url="/horse-"x"."
+		msg = "FRIDAY! https://friday.horse"url"jpg\n"
+		url=url"txt"
 		if (cache[url]) {
 			print "Cache hit: " url "\n";
 		} else {
@@ -61,20 +102,20 @@ function handle_request() {
 		}
 		msg = msg cache[url]
 	} else {
-		msg = "not friday"
+		msg = "Friday: " diff(eta-now) 
 	}
-	reply(msg)
 		
         if (request != "GET") {
                 synthetic(413,"Only support GET","We only like GET");
                 return;
         }
+	reply(msg)
 	
 }
-        
+
 BEGIN {
         LINT=1
-        port = "8080"   
+        port = "8080"
         Service = "/inet/tcp/" port "/0/0"
         do {
                 handle_request()
