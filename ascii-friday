@@ -1,0 +1,83 @@
+#!/usr/bin/gawk -f
+# ascii-friday-horse
+# Copyright (C) 2015 Kristian Lyngstøl <kristian@bohemians.org>
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#!/usr/bin/gawk -f
+
+function say(content) {
+        printf "%s", content |& Service
+}
+
+function synthetic(status, response, msg) {
+        say("HTTP/1.1 " status " " response "\n");
+        say("Connection: close\n");
+        say("\n");
+        say(msg);
+}
+
+function reply(msg) {
+        say("HTTP/1.1 200 OK\n");
+        say("Connection: close\n\n");
+        say(msg "\n");
+}
+
+function get(url) {
+	cache[url] = ""
+	while ("cat ./"url | getline foo) {
+		cache[url] = cache[url] "\n" foo
+	}
+}
+
+function handle_request() {
+        Service |& getline
+        url=$2
+        request=$1
+	"date --date=friday +%s" | getline eta
+	"date +%s" | getline now
+	if (now > eta && now < eta + 3600*24) {
+		msg = "FRIDAY!\n"
+		x= 1 + rand() * 16;
+		print "x: " x "\n"
+		x=int(x)
+		url="/horse-"x".txt"
+		if (cache[url]) {
+			print "Cache hit: " url "\n";
+		} else {
+			print "Cache miss: " url "\n";
+			get(url);
+		}
+		msg = msg cache[url]
+	} else {
+		msg = "not friday"
+	}
+	reply(msg)
+		
+        if (request != "GET") {
+                synthetic(413,"Only support GET","We only like GET");
+                return;
+        }
+	
+}
+        
+BEGIN {
+        LINT=1
+        port = "8080"   
+        Service = "/inet/tcp/" port "/0/0"
+        do {
+                handle_request()
+                close(Service)
+        } while(1)
+}

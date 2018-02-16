@@ -1,30 +1,28 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: friday-prod
-  namespace: default
   annotations:
+    kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-    kubernetes.io/ingress.class: "nginx"
+  name: friday-txt
 spec:
+  rules:
+  - host: ascii.friday.horse
+    http:
+      paths:
+      - backend:
+          serviceName: horse-txt
+          servicePort: 80
+        path: /
+  - host: txt.friday.horse
+    http:
+      paths:
+      - backend:
+          serviceName: horse-txt
+          servicePort: 80
+        path: /
   tls:
   - hosts:
-    - friday.horse
-    - www.friday.horse
-    secretName: friday-prod-tls
-  rules:
-  - host: www.friday.horse
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: horse
-          servicePort: 80
-  - host: friday.horse
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: horse
-          servicePort: 80
-
+    - ascii.friday.horse
+    - txt.friday.horse
+    secretName: friday-txt-tls
