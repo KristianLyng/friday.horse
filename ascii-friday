@@ -86,8 +86,12 @@ function handle_request() {
         Service |& getline
         url=$2
         request=$1
-	"date --date=friday +%s" | getline eta
-	"date +%s" | getline now
+	etacmd = "date --date=friday +%s"
+	etacmd | getline eta
+	nowcmd = "date +%s"
+	nowcmd | getline now
+	close(etacmd)
+	close(nowcmd)
 	if (now > eta && now < eta + 3600*24) {
 		x= 1 + rand() * 16;
 		x=int(x)

@@ -20,7 +20,7 @@ spec:
         run: horse
     spec:
       containers:
-      - image: klyno/friday.horse:2018-02-16-4
+      - image: klyno/friday.horse:2018-02-17-1
         imagePullPolicy: IfNotPresent
         name: horse
         ports:
