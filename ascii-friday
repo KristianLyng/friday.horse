@@ -92,7 +92,7 @@ function handle_request() {
 	nowcmd | getline now
 	close(etacmd)
 	close(nowcmd)
-	if (now > eta && now < eta + 3600*24) {
+	if ((now > eta && now < eta + 3600*24) || url == "/plz") {
 		x= 1 + rand() * 16;
 		x=int(x)
 		url="/horse-"x"."
