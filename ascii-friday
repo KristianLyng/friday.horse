@@ -46,6 +46,8 @@ function synthetic(status, response, msg) {
 function reply(msg) {
         say("HTTP/1.1 200 OK\n");
 	say("Content-Type: text/plain\n");
+	say("Cache-Control: max-age=1, s-maxage=1, must-revalidate, public\n");
+	say("Server: GNU AWK " PROCINFO["version"] " (seriously)\n");
         say("Connection: close\n\n");
         say(msg "\n");
 }
