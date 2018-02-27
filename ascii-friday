@@ -94,19 +94,23 @@ function handle_request() {
 	nowcmd | getline now
 	close(etacmd)
 	close(nowcmd)
-	if ((now > eta && now < eta + 3600*24) || url == "/plz") {
+	if ((now > eta && now < eta + 3600*24) || index(url,"/plz") > 0) {
 		x= 1 + rand() * 16;
 		x=int(x)
-		url="/horse-"x"."
-		msg = "FRIDAY! https://friday.horse"url"jpg\n"
-		url=url"txt"
-		if (cache[url]) {
-			print "Cache hit: " url "\n";
+		fil="/horse-"x
+		msg = "FRIDAY! https://friday.horse"fil".jpg\n"
+		if (index(url,"hd") > 0) {
+			fil=fil"-hd.txt"
 		} else {
-			print "Cache miss: " url "\n";
-			get(url);
+			fil=fil".txt"
 		}
-		msg = msg cache[url]
+		if (cache[fil]) {
+			print "Cache hit: " fil "\n";
+		} else {
+			print "Cache miss: " fil "\n";
+			get(fil);
+		}
+		msg = msg cache[fil]
 	} else {
 		msg = "Friday: " diff(eta-now) 
 	}
