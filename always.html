@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"> 
+<title>24/7 horse!</title>
+<style>
+body {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	font-size: 0.8em;
+}
+</style>
+</head>
+<body onload="initIt();" style="margin: 0px;">
+<img id="horse" style="display: none; width: 100%; position: absolute; left: 0px; right: 0px; z-index: -1;">
+<canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
+<!--
+    I'll use blink if you complain about <center>.
+    -->
+<center id="blah">
+<h1 style="margin-top: 0;">friday.horse - 24/7 horse edition</h1>
+<h4 id="attribution"></h4>
+</center>
+<p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;"><a href="https://github.com/KristianLyng/friday.horse">Friday horses as a service</a></p>
+<script>
+
+/*
+ * This is all essentially a lesson in "MEEEEH, can't be bothered".
+ *
+ * That said, I've written it all, and I'm fully aware that it probably 
+ * makes some people cringe. That's part of the fun. CRINGE I TELL YOU.
+ *
+ * You may want to look at http://kly.no for something slightly 
+ * more constructive.
+ */
+
+/*
+ * Add new horses here. Attribution can be HTML if needed.
+ */
+var horsies = [
+	{ horse: "horse-1.jpg", attribution: "N/A" },
+	{ horse: "horse-2.jpg", attribution: "N/A" },
+	{ horse: "horse-3.jpg", attribution: "N/A" },
+	{ horse: "horse-4.jpg", attribution: "N/A" },
+	{ horse: "horse-5.jpg", attribution: "N/A" },
+	{ horse: "horse-6.jpg", attribution: "N/A" },
+	{ horse: "horse-7.jpg", attribution: "N/A" },
+	{ horse: "horse-8.jpg", attribution: "N/A" },
+	{ horse: "horse-9.jpg", attribution: "N/A" },
+	{ horse: "horse-10.jpg", attribution: "N/A" },
+	{ horse: "horse-11.jpg", attribution: "N/A" },
+	{ horse: "horse-12.jpg", attribution: "N/A" },
+	{ horse: "horse-13.jpg", attribution: "N/A" },
+	{ horse: "horse-15.jpg", attribution: '<a href="https://www.pexels.com/photo/animal-silhouette-horizon-horse-9797/">link</a>' },
+	{ horse: "horse-16.jpg", attribution: '<a href="http://www.publicdomainpictures.net/view-image.php?image=112139&picture=horse-head-through-window">link</a>' },
+	{ horse: "horse-17.jpg", attribution: '<a href="https://www.flickr.com/photos/82182478@N00/5210454901">flickr-link</a>' }
+	
+];
+
+var fontHandler = 0;
+var ctx;
+var col = 0;
+var multi = 1;
+var degreeOfHelj = 1.0;
+var horses = new Array();
+function initCache()
+{
+       var i;
+       for (i=0; i<horsies.length; i++) {
+               var e = document.createElement("IMG");
+               e.src = horsies[i].horse;
+               horses.push(e);
+       }
+}
+
+function pickHorsy()
+{
+	var horse = document.getElementById("horse");
+	var at = document.getElementById("attribution");
+	var n = parseInt(1+Math.random()*13);
+	horse.src = horsyHorse.horse;
+	at.innerHTML = "Picture attribution: " + horsyHorse.attribution;
+	horse.style.display = "";
+        horse.style.top = 0;
+        horse.style.left = 0;
+        horse.style.width = "100%"
+        if (fontHandler == 0)
+            fontHandler = setInterval(setFontColor,10);
+	horse.onclick = clickHandler;
+}
+function clickHandler() {
+	rotateHorsy();
+	pickHorsy();
+}
+function initIt() {
+	ctx = document.getElementById("hiddenCanvas").getContext('2d');
+	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
+	rotateHorsy();
+	pickHorsy();
+	setInterval(rotateHorsy,60 * 1000);
+	doit();
+	document.onclick =  clickHandler;
+	setTimeout(initCache,10000);
+}
+function setFontColor() {
+	var e = document.getElementById('blah');
+	e.style.color = getColorStop(col);
+	col = col + multi;
+	if (col == 1000 || col == 0) {
+		multi = multi * -1;
+	}
+}
+function drawGradient(gradients)
+{
+        var gradient = ctx.createLinearGradient(0,0,1000,0);
+        var stops = gradients.length - 1;
+        for (var color in gradients) {
+                var i = color / stops;
+                gradient.addColorStop(i, gradients[color]);
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = gradient;
+        ctx.moveTo(0,0);
+        ctx.lineTo(1000,0);
+        ctx.lineWidth = 10; 
+        ctx.closePath();
+        ctx.stroke();
+        ctx.moveTo(0,0);
+}
+/*
+ * Get the color of a gradient, range is from 0 to 999 (inclusive).
+ */
+function getColorStop(x) {
+        x = parseInt(x);
+        if (x > 999)
+                x = 999;
+        if (x < 0)
+                x = 0;
+        return getColor(x,0);
+}
+
+/*
+ * Get the color on the hidden canvas at a specific point. Could easily be
+ * made generic.
+ */
+function getColor(x,y) {
+        var imageData = ctx.getImageData(x, y, 1, 1);
+        var data = imageData.data;
+        if (data.length < 4)
+                return false;
+        var ret = 'rgb(' + data[0] + ',' + data[1] + ',' + data[2] + ')';
+        return ret;
+}
+
+var horsyHorse;
+function rotateHorsy() {
+	var n = parseInt(Math.random()*horsies.length);
+	horsyHorse = horsies[n];
+}
+
+</script>
+</body>
+</html>
