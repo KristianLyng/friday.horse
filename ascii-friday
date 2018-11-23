@@ -33,23 +33,23 @@
 # - More pics? Need a manual update.
 
 function say(content) {
-        printf "%s", content |& Service
+	printf "%s", content |& Service
 }
 
 function synthetic(status, response, msg) {
-        say("HTTP/1.1 " status " " response "\n");
-        say("Connection: close\n");
-        say("\n");
-        say(msg);
+	say("HTTP/1.1 " status " " response "\n");
+	say("Connection: close\n");
+	say("\n");
+	say(msg);
 }
 
 function reply(msg) {
-        say("HTTP/1.1 200 OK\n");
+	say("HTTP/1.1 200 OK\n");
 	say("Content-Type: text/plain\n");
 	say("Cache-Control: max-age=1, s-maxage=1, must-revalidate, public\n");
 	say("Server: GNU AWK " PROCINFO["version"] " (seriously)\n");
-        say("Connection: close\n\n");
-        say(msg "\n");
+	say("Connection: close\n\n");
+	say(msg "\n");
 }
 
 function get(url) {
@@ -84,10 +84,11 @@ function diff(difft) {
 	str = (difft / d) " days, " str;
 	return str
 }
+
 function handle_request() {
-        Service |& getline
-        url=$2
-        request=$1
+	Service |& getline
+	url=$2
+	request=$1
 	etacmd = "date --date=friday +%s"
 	etacmd | getline eta
 	nowcmd = "date +%s"
@@ -114,21 +115,20 @@ function handle_request() {
 	} else {
 		msg = "Friday: " diff(eta-now) 
 	}
-		
-        if (request != "GET") {
-                synthetic(413,"Only support GET","We only like GET");
-                return;
-        }
+
+	if (request != "GET") {
+		synthetic(413,"Only support GET","We only like GET");
+		return;
+	}
 	reply(msg)
-	
 }
 
 BEGIN {
-        LINT=1
-        port = "8080"
-        Service = "/inet/tcp/" port "/0/0"
-        do {
-                handle_request()
-                close(Service)
-        } while(1)
+	LINT=1
+	port = "8080"
+	Service = "/inet/tcp/" port "/0/0"
+	do {
+		handle_request()
+		close(Service)
+	} while(1)
 }
