@@ -8,17 +8,19 @@ body { font-family: "Comic Sans MS", cursive, sans-serif; font-size: 0.8em; }
 </style>
 <link rel="icon" type="image/png" href="/favicon.png">
 </head>
-<body onload="initIt();" style="margin: 0px;">
+<body bgcolor="black" onload="initIt();" style="margin: 0px;">
 <img id="horse" style="display: none; width: 100%; position: absolute; left: 0px; right: 0px; z-index: -1;">
 <canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
 <!--
     I'll use blink if you complain about <center>.
     -->
 <center id="blah">
+    <div style="color: white">
 <h1 style="margin-top: 0;">friday.horse</h1>
 <h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
 <h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
 <h4 id="attribution"></h4>
+    </div>
 </center>
 <p style="font-size: xx-small; position: absolute; right: 0px; bottom: 0px;"><a href="https://github.com/KristianLyng/friday.horse">Friday horses as a service</a></p>
 <script>
