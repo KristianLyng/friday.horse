@@ -203,7 +203,6 @@ function pickHorsy()
 }
 function clickHandler() {
 	rotateHorsy();
-	pickHorsy();
 }
 function horsy()
 {
@@ -216,9 +215,9 @@ function horsy()
 function initIt() {
 	ctx = document.getElementById("hiddenCanvas").getContext('2d');
 	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
-	rotateHorsy();
+	findNewHorsy();
 	horsy();
-	setInterval(rotateHorsy,60 * 1000);
+	setInterval(findNewHorsy,60 * 1000);
 	setInterval(doit, 1000);
 	doit();
 	document.onclick =  clickHandler;
@@ -275,11 +274,22 @@ function getColor(x,y) {
 }
 
 var horsyHorse;
-function rotateHorsy() {
+function findNewHorsy() {
 	var n = parseInt(Math.random()*horsies.length);
 	horsyHorse = horsies[n];
 }
 
+function rotateHorsy() {
+    horse.classList.toggle("is-dizzy");
+}
 </script>
+<style>
+    #horse {
+        transition: transform 1s ease-in-out;
+    }
+    #horse.is-dizzy {
+        transform: rotate(360deg);
+    }
+</style>
 </body>
 </html>
