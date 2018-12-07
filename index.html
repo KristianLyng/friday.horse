@@ -8,14 +8,14 @@ body { font-family: "Comic Sans MS", cursive, sans-serif; font-size: 0.8em; }
 </style>
 <link rel="icon" type="image/png" href="/favicon.png">
 </head>
-<body bgcolor="black" onload="initIt();" style="margin: 0px;">
+<body onload="initIt();" style="margin: 0px;">
 <img id="horse" style="display: none; width: 100%; position: absolute; left: 0px; right: 0px; z-index: -1;">
 <canvas id="hiddenCanvas" width="1000" height="10" style="display: none; position: absolute; z-index: 1000 "></canvas>
 <!--
     I'll use blink if you complain about <center>.
     -->
 <center id="blah">
-    <div style="color: white">
+    <div id="text-wrapper">
 <h1 style="margin-top: 0;">friday.horse</h1>
 <h1 style="margin-top: 0;">Friday is here <div id="output1" style="display: inline;"></div></h1>
 <h1>The weekend is here <div id="output2" style="display: inline"></div></h1>
@@ -215,6 +215,13 @@ function horsy()
 function initIt() {
 	ctx = document.getElementById("hiddenCanvas").getContext('2d');
 	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
+	if (document.URL.match(/.*black.friday.*/)) {
+		foo = document.getElementByTagName("body")[0];
+		bar = document.getElementById("text-wrapper");
+		foo.style.backgroundColor = "black";
+		bar.style.color = "white";
+	}
+
 	findNewHorsy();
 	horsy();
 	setInterval(findNewHorsy,60 * 1000);
