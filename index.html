@@ -216,7 +216,7 @@ function initIt() {
 	ctx = document.getElementById("hiddenCanvas").getContext('2d');
 	drawGradient(["blue","red","green","white","black","orange","purple","pink", "brown", "pink", "red" ]);
 	if (document.URL.match(/.*black.friday.*/)) {
-		foo = document.getElementByTagName("body")[0];
+		foo = document.getElementsByTagName("body")[0];
 		bar = document.getElementById("text-wrapper");
 		foo.style.backgroundColor = "black";
 		bar.style.color = "white";
