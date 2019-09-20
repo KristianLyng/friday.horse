@@ -186,7 +186,7 @@ function pickHorsy()
 	var at = document.getElementById("attribution");
 	var n = parseInt(1+Math.random()*13);
 	horse.src = horsyHorse.horse;
-	at.innerHTML = horsyHorse.attribution === "N/A" ? "📸: " + horsyHorse.attribution : "📸: Horse";
+	at.innerHTML = horsyHorse.attribution != "N/A" ? "📸: " + horsyHorse.attribution : "📸: Horse";
 	horse.style.display = "";
 	if (degreeOfHelj < 1.0) {
 		horse.style.left = ((0.5 - (degreeOfHelj/4)) * 100) + "%";
