@@ -1,4 +1,4 @@
-all:  $(addsuffix .txt,$(basename $(wildcard horse*.jpg))) $(addsuffix -hd.txt,$(basename $(wildcard horse*.jpg))) horse-14.txt
+all:  $(addsuffix .txt,$(basename $(wildcard horse*.jpg))) $(addsuffix -hd.txt,$(basename $(wildcard horse*.jpg))) horse-14.txt horse-14-hd.txt
 # I'm lazy
 horse-14.jpg:
 	cp horse-1.jpg horse-14.jpg
