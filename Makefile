@@ -10,3 +10,5 @@ horse-%-hd.txt: horse-%-hd.pbm
 	pbmtoascii $< > $@
 horse-%-hd.pbm: horse-%.jpg Makefile
 	convert $< -scale 500x500 $@
+dist:
+	-rsync --delete -a ./ galen.kly.no:/srv/friday.horse

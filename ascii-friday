@@ -1,6 +1,6 @@
 #!/usr/bin/gawk -f
 # ascii-friday-horse
-# Copyright (C) 2018 Kristian Lyngstøl <kly@kly.no>
+# Copyright (C) 2018,2022 Kristian Lyngstøl <kly@kly.no>
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,7 +96,7 @@ function handle_request() {
 	close(etacmd)
 	close(nowcmd)
 	if ((now > eta && now < eta + 3600*24) || index(url,"/plz") > 0) {
-		x= 1 + rand() * 16;
+		x= 1 + rand() * 21;
 		x=int(x)
 		fil="/horse-"x
 		msg = "FRIDAY! https://friday.horse"fil".jpg\n"
