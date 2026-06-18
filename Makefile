@@ -11,4 +11,4 @@ horse-%-hd.txt: horse-%-hd.pbm
 horse-%-hd.pbm: horse-%.jpg Makefile
 	convert $< -scale 500x500 $@
 dist:
-	-rsync --delete --exclude=.git --delete-excluded -a ./ www.kly.no:/home/kly/public_html/friday
+	-rsync --delete --exclude=.git --exclude=*.swp --delete-excluded -a ./ www.kly.no:/home/kly/public_html/friday
